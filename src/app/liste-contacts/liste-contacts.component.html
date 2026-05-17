@@ -1,0 +1,106 @@
+<!-- liste-contacts.component.html -->
+<div class="container">
+  <h2>📋 Contacts ({{ contacts.length }})</h2>
+
+  <!-- Boutons de filtre -->
+  <div class="filters">
+    <button (click)="filtreActif = null" [class.active-btn]="filtreActif === null">Tous ({{ contacts.length }})</button>
+    <button (click)="filtreActif = true"  [class.active-btn]="filtreActif === true">Actifs</button>
+    <button (click)="filtreActif = false" [class.active-btn]="filtreActif === false">Inactifs</button>
+  </div>
+
+  <!-- @if / @else if / @else -->
+  @if (contacts.length > 3) {
+    <p class="info">📈 Carnet bien rempli !</p>
+  } @else if (contacts.length > 0) {
+    <p class="info">📊 {{ contacts.length }} contact(s) enregistré(s)</p>
+  } @else {
+    <p class="info">📭 Le carnet est vide.</p>
+  }
+
+  <!-- @if : liste filtrée vide -->
+  @if (contactsFiltres.length === 0) {
+    <p class="empty">Aucun contact dans cette catégorie.</p>
+  }
+
+  <!-- @for : liste principale -->
+  <ul class="contact-list">
+    @for (c of contactsFiltres; track c.email; let i = $index) {
+      <li
+        [ngClass]="{
+          'contact-actif':   c.actif,
+          'contact-inactif': !c.actif,
+          'top-score':       c.score >= 16,
+          'premier-item':    $first
+        }"
+        [appSurvol]="c.role === 'admin' ? '#FFE0E0' : '#E0F4FF'"
+      >
+        <span class="num">{{ i + 1 }}.</span>
+
+        <!-- Pipe custom initiales -->
+        <span class="avatar">{{ c.nom | initiales }}</span>
+
+        <!-- Pipe uppercase built-in -->
+        <strong>{{ c.nom | uppercase }}</strong>
+
+        <!-- Pipe slice built-in -->
+        <em class="email">{{ c.email | slice:0:20 }}</em>
+
+        <!-- Pipe number + percent built-in -->
+        <span [ngClass]="'score-' + (c.score >= 16 ? 'excellent' : c.score >= 10 ? 'passable' : 'echec')">
+          {{ c.score | number:'1.1-1' }}/20
+          ({{ c.score / 20 | percent:'1.0-0' }})
+        </span>
+
+        <!-- Pipe custom mention (bonus) -->
+        <span class="mention">{{ c.score | mention }}</span>
+
+        <!-- @switch : affichage du rôle -->
+        @switch (c.role) {
+          @case ('admin') { <span class="role admin">🔐 Admin</span> }
+          @case ('user')  { <span class="role user">👤 User</span>  }
+          @case ('guest') { <span class="role guest">👥 Guest</span> }
+          @default        { <span class="role">❓ Inconnu</span>    }
+        }
+
+        <!-- @if : statut actif/inactif -->
+        @if (c.actif) { <span class="status">🟢 Actif</span> }
+        @else         { <span class="status">🔴 Inactif</span> }
+
+        <!-- Marqueurs premier/dernier -->
+        @if ($first) { <small class="marker">(Premier)</small> }
+        @if ($last)  { <small class="marker">(Dernier)</small> }
+
+        <!-- Actions -->
+        <div class="actions">
+          <button (click)="toggleActif(c.email)" class="btn-toggle">
+            {{ c.actif ? 'Désactiver' : 'Activer' }}
+          </button>
+          <button (click)="supprimer(c.email)" class="btn-delete">🗑️</button>
+        </div>
+      </li>
+    } @empty {
+      <li class="empty-item">Aucun résultat pour ce filtre.</li>
+    }
+  </ul>
+
+  <!-- Tableau récapitulatif avec $even (lignes alternées) -->
+  <h3>Tableau récapitulatif</h3>
+  <table class="recap-table">
+    <thead>
+      <tr><th>#</th><th>Nom</th><th>Score</th><th>Date</th><th>Rôle</th></tr>
+    </thead>
+    <tbody>
+      @for (c of contacts; track c.email; let pair = $even; let i = $index) {
+        <tr [style.background]="pair ? '#F5F5F5' : '#FFFFFF'"
+            appHighlight [isActive]="c.actif">
+          <td>{{ i + 1 }}</td>
+          <td>{{ c.nom | titlecase }}</td>
+          <td>{{ c.score | number:'1.1-1' }}/20</td>
+          <td>{{ today | date:'dd/MM/yyyy' }}</td>
+          <td>{{ c.role }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

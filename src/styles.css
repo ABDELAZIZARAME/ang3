@@ -1,0 +1,5 @@
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #f0f2f5; }
+
+.active  { border: 2px solid #4CAF50 !important; }
+.hovered { background: #FFF9C4 !important; }

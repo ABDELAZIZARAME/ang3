@@ -1,0 +1,12 @@
+<div class="app-shell">
+  <header class="app-header">
+    <h1>📋 Gestionnaire de Contacts — Angular 20</h1>
+    <p class="subtitle">TP3 | Abdelaziz Arame | ILISI1 2025/2026</p>
+  </header>
+  <main class="app-main">
+    <app-stats-contacts></app-stats-contacts>
+    <app-formulaire-contact (contactAjoute)="onContactAjoute($event)">
+    </app-formulaire-contact>
+    <app-liste-contacts></app-liste-contacts>
+  </main>
+</div>

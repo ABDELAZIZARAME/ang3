@@ -1,0 +1,43 @@
+<!-- formulaire-contact.component.html -->
+<div class="form-container">
+  <h3>➕ Ajouter un contact</h3>
+
+  @if (erreur) {
+    <p class="erreur">⚠️ {{ erreur }}</p>
+  }
+
+  <div class="form-grid">
+    <!-- [(ngModel)] Two-Way Binding -->
+    <input [(ngModel)]="nouveau.nom"   placeholder="Nom complet" class="input" />
+    <input [(ngModel)]="nouveau.email" placeholder="Email"       class="input" />
+
+    <input
+      type="number"
+      [(ngModel)]="nouveau.score"
+      min="0" max="20"
+      placeholder="Score (0-20)"
+      class="input"
+    />
+
+    <select [(ngModel)]="nouveau.role" class="input">
+      <option value="admin">Admin</option>
+      <option value="user">Utilisateur</option>
+      <option value="guest">Visiteur</option>
+    </select>
+
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="nouveau.actif" />
+      Actif
+    </label>
+
+    <button (click)="soumettre()" class="btn-add">Ajouter</button>
+  </div>
+
+  <!-- Aperçu en temps réel (pipe initiales + uppercase) -->
+  @if (nouveau.nom) {
+    <p class="preview">
+      Aperçu : <strong>{{ nouveau.nom | uppercase }}</strong>
+      &nbsp;— Initiales : <em>{{ nouveau.nom | initiales }}</em>
+    </p>
+  }
+</div>

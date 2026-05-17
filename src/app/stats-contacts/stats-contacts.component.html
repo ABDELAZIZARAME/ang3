@@ -1,0 +1,47 @@
+<!-- stats-contacts.component.html -->
+<div class="stats-container">
+  <h3>📊 Statistiques</h3>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-value">{{ totalContacts }}</span>
+      <span class="stat-label">Total contacts</span>
+    </div>
+    <div class="stat-card actifs">
+      <span class="stat-value">{{ totalActifs }}</span>
+      <span class="stat-label">Actifs</span>
+    </div>
+    <div class="stat-card inactifs">
+      <span class="stat-value">{{ totalContacts - totalActifs }}</span>
+      <span class="stat-label">Inactifs</span>
+    </div>
+    <div class="stat-card score">
+      <span class="stat-value">{{ scoreMoyen | number:'1.0-1' }}/20</span>
+      <span class="stat-label">Score moyen</span>
+    </div>
+  </div>
+
+  <!-- Barre de progression avec ngStyle -->
+  <div class="progress-label">
+    Taux d'activité : {{ tauxActivite | percent:'1.0-0' }}
+  </div>
+  <div [ngStyle]="{ 'width': '100%', 'background': '#E0E0E0', 'border-radius': '4px', 'height': '20px' }">
+    <div [ngStyle]="{
+      'width': tauxActivite + '%',
+      'background-color': couleurBarre,
+      'height': '20px',
+      'border-radius': '4px',
+      'transition': 'width 0.5s ease'
+    }"></div>
+  </div>
+
+  <!-- Texte dont la taille et couleur changent selon le score moyen (ngStyle) -->
+  <p [ngStyle]="{
+    'color':       scoreMoyen >= 14 ? '#1B5E20' : '#B71C1C',
+    'font-weight': 'bold',
+    'font-size':   (14 + scoreMoyen / 4) + 'px',
+    'margin-top':  '10px'
+  }">
+    Score moyen : {{ scoreMoyen }}/20
+  </p>
+</div>
